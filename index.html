@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dremory · 灵感图集</title>
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23111111' d='M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8zM18.6 2.1l.85 2.05 2.05.85-2.05.85-.85 2.05-.85-2.05-2.05-.85 2.05-.85z'/></svg>">
 </head>
 <body>
@@ -423,16 +423,15 @@
 <div class="overlay" id="profileOverlay" hidden>
   <div class="overlay-mask" data-close="profile"></div>
   <div class="profile-panel" role="dialog">
-    <button class="close-btn light" data-close="profile" aria-label="close">
+    <button class="close-btn" data-close="profile" aria-label="close">
       <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     </button>
 
     <!-- 普通浏览态 -->
     <div class="profile-view" id="profileView">
-      <div class="profile-banner" id="profileBanner">
-        <span class="avatar xl" id="pfAvatar"></span>
-      </div>
+      <div class="profile-banner" id="profileBanner"></div>
       <div class="profile-body">
+        <span class="avatar xl" id="pfAvatar"></span>
         <h2 class="pf-name" id="pfName"></h2>
         <p class="pf-bio" id="pfBio"></p>
         <div class="pf-stats">
@@ -510,6 +509,6 @@
   </div>
 </footer>
 
-<script src="app.js?v=8"></script>
+<script src="app.js?v=9"></script>
 </body>
 </html>
