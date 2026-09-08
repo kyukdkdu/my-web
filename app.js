@@ -264,9 +264,14 @@ const TAGS = {
   cute:      { label: { zh: '治愈系',   en: 'Healing',    ja: '癒し',   ko: '힐링' } }
 };
 
-/* ================= 三、种子创作者与作品（AI 生成图） ================= */
-const AI_IMG = (prompt, size) =>
-  `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(prompt)}&image_size=${size}`;
+/* ================= 三、种子创作者与作品 ================= */
+/* 图片源：Picsum Photos —— 全球 CDN 加速、免费、100% 稳定
+   用 seed 保证每个作品每次返回同一张图，按方向裁切尺寸 */
+const U = (seed, orient) => {
+  const w = orient === 'l' ? 800 : 600;
+  const h = orient === 'l' ? 600 : (orient === 'p' ? 800 : 600);
+  return `https://picsum.photos/seed/${seed}/${w}/${h}`;
+};
 
 const SEED_AUTHORS = {
   luna:  { name: 'Luna',  color: ['#ff9a9e', '#f6416c'] },
@@ -278,76 +283,76 @@ const SEED_AUTHORS = {
 const SEED_ITEMS = [
   { id: 's1',  author: 'kenji', type: 'photo', orient: 'l', price: 0, tags: ['nature', 'minimal'], likes: 328,
     title: { zh: '晨雾山巅', en: 'Misty Mountain Dawn', ja: '霧の山頂', ko: '안개 낀 산정' },
-    img: AI_IMG('misty mountain range at golden sunrise, layered fog, landscape photography, soft warm light', 'landscape_16_9') },
+    img: U('dremory-mountain', 'l') },
   { id: 's2',  author: 'luna', type: 'ai', orient: 'p', price: 12, tags: ['cyberpunk', 'portrait'], likes: 512,
     title: { zh: '霓虹赛博少女', en: 'Neon Cyber Girl', ja: 'ネオンサイバーガール', ko: '네온 사이버 걸' },
-    img: AI_IMG('cyberpunk girl portrait with neon light reflections, pink and blue neon, digital anime art', 'portrait_4_3') },
+    img: U('dremory-neon', 'p') },
   { id: 's3',  author: 'mia', type: 'illu', orient: 's', price: 0, tags: ['animals', 'cute', 'watercolor'], likes: 276,
     title: { zh: '水彩猫咪', en: 'Watercolor Cat', ja: '水彩猫', ko: '수채화 고양이' },
-    img: AI_IMG('cute fluffy cat watercolor illustration, soft pastel colors, white background, hand drawn', 'square_hd') },
+    img: U('dremory-cat', 's') },
   { id: 's4',  author: 'ahao', type: 'photo', orient: 'p', price: 8, tags: ['architecture', 'minimal'], likes: 189,
     title: { zh: '白色极简建筑', en: 'White Minimal Architecture', ja: '白いミニマル建築', ko: '화이트 미니멀 건축' },
-    img: AI_IMG('minimalist white modern architecture, curved concrete walls, soft shadows, architectural photography', 'portrait_4_3') },
+    img: U('dremory-arch', 'p') },
   { id: 's5',  author: 'luna', type: 'ai', orient: 'l', price: 25, tags: ['fantasy'], likes: 643,
     title: { zh: '云中巨龙', en: 'Dragon in the Clouds', ja: '雲の竜', ko: '구름 속 용' },
-    img: AI_IMG('majestic dragon flying above golden clouds, epic fantasy digital painting, dramatic light', 'landscape_16_9') },
+    img: U('dremory-dragon', 'l') },
   { id: 's6',  author: 'kenji', type: 'photo', orient: 'p', price: 0, tags: ['city', 'food'], likes: 204,
     title: { zh: '午后咖啡馆', en: 'Afternoon Café', ja: '午後のカフェ', ko: '오후의 카페' },
-    img: AI_IMG('cozy coffee shop interior with warm lights, wooden tables, latte art, lifestyle photography', 'portrait_4_3') },
+    img: U('dremory-coffee', 'p') },
   { id: 's7',  author: 'mia', type: 'ai', orient: 's', price: 10, tags: ['abstract'], likes: 351,
     title: { zh: '流金抽象', en: 'Flowing Gold Abstract', ja: '流れるゴールド', ko: '유동 골드 추상' },
-    img: AI_IMG('abstract fluid art, gold and deep blue swirling paint, luxury marble texture', 'square_hd') },
+    img: U('dremory-gold', 's') },
   { id: 's8',  author: 'kenji', type: 'photo', orient: 'l', price: 6, tags: ['city', 'nature'], likes: 427,
     title: { zh: '京都樱花道', en: 'Kyoto Sakura Road', ja: '京都の桜道', ko: '교토 벚꽃길' },
-    img: AI_IMG('Kyoto street with cherry blossom trees, pink petals falling, traditional houses, spring photography', 'landscape_16_9') },
+    img: U('dremory-sakura', 'l') },
   { id: 's9',  author: 'luna', type: 'ai', orient: 'p', price: 0, tags: ['fantasy', 'minimal'], likes: 298,
     title: { zh: '浮空群岛', en: 'Floating Islands', ja: '浮かぶ島々', ko: '부유 섬' },
-    img: AI_IMG('surreal floating islands with waterfalls in blue sky, dreamy fantasy concept art', 'portrait_4_3') },
+    img: U('dremory-islands', 'p') },
   { id: 's10', author: 'mia', type: 'illu', orient: 's', price: 5, tags: ['nature', 'watercolor'], likes: 167,
     title: { zh: '植物图谱', en: 'Botanical Chart', ja: 'ボタニカル図鑑', ko: '보타니컬 도감' },
-    img: AI_IMG('botanical green leaves illustration set, vintage herbarium style, cream paper background', 'square_hd') },
+    img: U('dremory-botanical', 's') },
   { id: 's11', author: 'ahao', type: 'photo', orient: 'l', price: 9, tags: ['space', 'nature'], likes: 389,
     title: { zh: '星落沙海', en: 'Stars over Dunes', ja: '砂漠の星空', ko: '사막의 별밤' },
-    img: AI_IMG('starry night milky way over desert sand dunes, astrophotography, purple and teal sky', 'landscape_16_9') },
+    img: U('dremory-stars', 'l') },
   { id: 's12', author: 'mia', type: 'illu', orient: 'p', price: 7, tags: ['anime', 'city'], likes: 455,
     title: { zh: '雨中伞少女', en: 'Girl with Umbrella', ja: '雨傘の少女', ko: '우산 소녀' },
-    img: AI_IMG('anime style girl holding umbrella in rain, city street at dusk, lofi aesthetic illustration', 'portrait_4_3') },
+    img: U('dremory-umbrella', 'p') },
   { id: 's13', author: 'ahao', type: 'album', orient: 's', price: 39, tags: ['retro', 'minimal'], likes: 96,
     title: { zh: '麻布实物画册', en: 'Linen Photo Album', ja: 'リネン画集', ko: '리넨 화집' },
-    img: AI_IMG('linen cover photo album book mockup on wooden table, elegant stationery photography', 'square_hd') },
+    img: U('dremory-album', 's') },
   { id: 's14', author: 'kenji', type: 'photo', orient: 'p', price: 11, tags: ['nature'], likes: 233,
     title: { zh: '珊瑚海', en: 'Coral Sea', ja: 'サンゴの海', ko: '산호초 바다' },
-    img: AI_IMG('vibrant underwater coral reef with tropical fish, clear blue water, diving photography', 'portrait_4_3') },
+    img: U('dremory-coral', 'p') },
   { id: 's15', author: 'luna', type: 'ai', orient: 'l', price: 0, tags: ['retro', 'anime'], likes: 571,
     title: { zh: '90年代落日', en: '90s Retro Sunset', ja: '90年代夕焼け', ko: '90년대 노을' },
-    img: AI_IMG('retro 90s anime style sunset over ocean, vaporwave colors, nostalgic, film grain', 'landscape_16_9') },
+    img: U('dremory-sunset', 'l') },
   { id: 's16', author: 'mia', type: 'photo', orient: 's', price: 0, tags: ['nature', 'minimal'], likes: 188,
     title: { zh: '花瓣露珠', en: 'Dewdrop on Petal', ja: '花びらの露', ko: '꽃잎 이슬' },
-    img: AI_IMG('macro photo of dewdrop on flower petal, morning light, bokeh green background', 'square_hd') },
+    img: U('dremory-dewdrop', 's') },
   { id: 's17', author: 'ahao', type: 'illu', orient: 'p', price: 13, tags: ['fantasy', 'retro'], likes: 264,
     title: { zh: '蒸汽飞艇', en: 'Steampunk Airship', ja: '蒸気飛空艇', ko: '스팀펑크 비행선' },
-    img: AI_IMG('steampunk airship flying over Victorian city, brass gears and clouds, detailed illustration', 'portrait_4_3') },
+    img: U('dremory-steampunk', 'p') },
   { id: 's18', author: 'kenji', type: 'photo', orient: 'l', price: 10, tags: ['space', 'nature'], likes: 342,
     title: { zh: '极光森林', en: 'Aurora Forest', ja: 'オーロラの森', ko: '오로라 숲' },
-    img: AI_IMG('green northern lights aurora over snowy pine forest, winter night landscape photography', 'landscape_16_9') },
+    img: U('dremory-aurora', 'l') },
   { id: 's19', author: 'mia', type: 'ai', orient: 's', price: 4, tags: ['abstract', 'minimal'], likes: 157,
     title: { zh: '粉彩几何', en: 'Pastel Geometry', ja: 'パステル幾何', ko: '파스텔 기하' },
-    img: AI_IMG('geometric pastel color poster design, soft shapes, bauhaus style, minimal flat art', 'square_hd') },
+    img: U('dremory-geometry', 's') },
   { id: 's20', author: 'luna', type: 'photo', orient: 'p', price: 15, tags: ['portrait', 'city'], likes: 301,
     title: { zh: '街头人像', en: 'Street Portrait', ja: 'ストリートポートレート', ko: '거리 인물' },
-    img: AI_IMG('street fashion portrait of young woman, urban style, natural light, film photography look', 'portrait_4_3') },
+    img: U('dremory-portrait', 'p') },
   { id: 's21', author: 'luna', type: 'ai', orient: 'l', price: 0, tags: ['abstract', 'cute'], likes: 419,
     title: { zh: '梦境云海', en: 'Dreamy Cloudscape', ja: '夢の雲海', ko: '꿈의 구름' },
-    img: AI_IMG('dreamy pastel cloudscape, cotton candy clouds, soft gradient sky, surreal digital art', 'landscape_16_9') },
+    img: U('dremory-clouds', 'l') },
   { id: 's22', author: 'ahao', type: 'illu', orient: 'p', price: 18, tags: ['traditional', 'nature'], likes: 276,
     title: { zh: '墨鹤', en: 'Ink Cranes', ja: '墨の鶴', ko: '먹 학' },
-    img: AI_IMG('traditional Chinese ink wash painting of red-crowned cranes, rice paper texture, elegant brush strokes', 'portrait_4_3') },
+    img: U('dremory-ink', 'p') },
   { id: 's23', author: 'kenji', type: 'photo', orient: 's', price: 0, tags: ['food'], likes: 245,
     title: { zh: '一碗拉面', en: 'Ramen Bowl', ja: 'ラーメン', ko: '라멘 한 그릇' },
-    img: AI_IMG('delicious japanese ramen bowl with chashu pork and soft egg, steam rising, food photography', 'square_hd') },
+    img: U('dremory-ramen', 's') },
   { id: 's24', author: 'mia', type: 'ai', orient: 'p', price: 20, tags: ['cyberpunk', 'portrait'], likes: 387,
     title: { zh: '未来机器人', en: 'Future Robot', ja: '未来ロボ', ko: '퓨처 로봇' },
-    img: AI_IMG('futuristic humanoid robot portrait, metallic face, soft studio light, sci-fi concept art', 'portrait_4_3') }
+    img: U('dremory-robot', 'p') }
 ];
 
 /* 各类型作品的描述模板（四语言） */
