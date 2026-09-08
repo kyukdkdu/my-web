@@ -265,34 +265,20 @@ const TAGS = {
 };
 
 /* ================= 三、种子创作者与作品 ================= */
-/* 图片源：内联 SVG 渐变占位图 —— 零外部请求，全球秒开
-   每个作品有唯一的渐变色和图案，不依赖任何外部服务 */
-const GRADIENT_PAIRS = [
-  ['#ff9a9e', '#fad0c4'], ['#a18cd1', '#fbc2eb'], ['#f6d365', '#fda085'],
-  ['#84fab0', '#8fd3f4'], ['#fccb90', '#d57eeb'], ['#e0c3fc', '#8ec5fc'],
-  ['#f093fb', '#f5576c'], ['#4facfe', '#00f2fe'], ['#43e97b', '#38f9d7'],
-  ['#fa709a', '#fee140'], ['#30cfd0', '#330867'], ['#a8edea', '#fed6e3'],
-  ['#ff6a88', '#ff99ac'], ['#5ee7df', '#b490df'], ['#c479f8', '#f0a6ca'],
-  ['#5b86e5', '#36d1dc'], ['#ec77ab', '#7873f5'], ['#f3e7e9', '#e3eeff'],
-  ['#e8d0fe', '#fbc7c4'], ['#d4fc79', '#96e6a1'], ['#84fab0', '#8fd3f4'],
-  ['#ffecd2', '#fcb69f'], ['#ff9a9e', '#fecfef'], ['#667eea', '#764ba2'],
-  ['#f6d365', '#fda085']
-];
+/* 图片源：本地真实图片 images/work-XX.jpg
+   —— 随项目一起部署到服务器，全球可访问，零外部请求、不依赖任何第三方图床 */
+const LOCAL_IMGS = {
+  l: ['images/work-01.jpg', 'images/work-05.jpg', 'images/work-08.jpg', 'images/work-10.jpg'],
+  p: ['images/work-02.jpg', 'images/work-04.jpg', 'images/work-06.jpg', 'images/work-09.jpg'],
+  s: ['images/work-03.jpg', 'images/work-07.jpg']
+};
+const ALL_IMGS = [...LOCAL_IMGS.l, ...LOCAL_IMGS.p, ...LOCAL_IMGS.s];
 const U = (seed, orient) => {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  const [c1, c2] = GRADIENT_PAIRS[h % GRADIENT_PAIRS.length];
-  const w = orient === 'l' ? 800 : 600;
-  const ht = orient === 'l' ? 600 : (orient === 'p' ? 800 : 600);
-  const shapes = Array.from({length: 6}, (_, i) => {
-    const cx = ((h >> (i * 3)) & 0xff) % 100;
-    const cy = ((h >> (i * 5)) & 0xff) % 100;
-    const r = 8 + ((h >> (i * 2)) & 0x1f);
-    const op = 0.06 + ((h >> i) & 0x07) * 0.03;
-    return `<circle cx="${cx}%" cy="${cy}%" r="${r}%" fill="#fff" opacity="${op}"/>`;
-  }).join('');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${ht}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><rect width="${w}" height="${ht}" fill="url(#g)"/>${shapes}</svg>`;
-  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  const pool = (LOCAL_IMGS[orient] && LOCAL_IMGS[orient].length) ? LOCAL_IMGS[orient] : ALL_IMGS;
+  const src = pool[h % pool.length];
+  return src;
 };
 
 const SEED_AUTHORS = {
