@@ -558,12 +558,15 @@ a { color: inherit; text-decoration: none; }
 .profile-banner {
   height: 150px; position: relative;
   background: var(--bg-soft); border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-end; padding: 0 36px;
 }
-.profile-body { padding: 0 36px 36px; margin-top: -46px; position: relative; }
-.profile-body .avatar.xl { border: 3px solid var(--bg-elev); background: var(--text); }
-.pf-name { font-size: 25px; font-weight: 700; margin: 14px 0 4px; letter-spacing: -.02em; }
-.pf-bio { color: var(--text-2); font-size: 14.5px; margin-bottom: 20px; white-space: pre-wrap; line-height: 1.7; }
+.profile-body { padding: 0 36px 36px; position: relative; }
+.profile-body .avatar.xl {
+  display: inline-grid; margin-top: -46px; margin-bottom: 14px;
+  border: 4px solid var(--bg-elev); background: var(--text);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.pf-name { font-size: 25px; font-weight: 700; margin: 0 0 6px; letter-spacing: -.02em; }
+.pf-bio { color: var(--text-2); font-size: 14.5px; margin-bottom: 22px; white-space: pre-wrap; line-height: 1.7; }
 .pf-stats { display: flex; gap: 0; margin-bottom: 22px; }
 .pf-stats > div { padding-right: 28px; margin-right: 28px; border-right: 1px solid var(--border); }
 .pf-stats > div:last-child { border-right: none; }
@@ -586,7 +589,7 @@ a { color: inherit; text-decoration: none; }
   padding: 8px;
 }
 .edit-banner {
-  height: 180px; margin-top: 31px;
+  height: 150px; margin-top: 31px;
   background: var(--bg-soft); border-bottom: 1px solid var(--border);
   display: grid; place-items: center;
 }
@@ -597,8 +600,9 @@ a { color: inherit; text-decoration: none; }
 }
 .banner-change:hover { border-color: var(--text); }
 .banner-change svg { width: 17px; height: 17px; }
-.edit-body { padding: 0 36px 36px; margin-top: -46px; position: relative; }
-.edit-avatar-wrap { position: relative; display: inline-block; cursor: pointer; }
+.edit-body { padding: 0 36px 36px; position: relative; }
+.edit-avatar-wrap { position: relative; display: inline-block; cursor: pointer; margin-top: -46px; margin-bottom: 6px; }
+.edit-avatar-wrap .avatar.xl { border: 4px solid var(--bg-elev); box-shadow: 0 0 0 1px var(--border); }
 .edit-avatar-mask {
   position: absolute; inset: 0; border-radius: 50%;
   background: rgba(0,0,0,.5); color: #fff;
@@ -694,15 +698,17 @@ a { color: inherit; text-decoration: none; }
   .related-card { width: 100px; }
   .related-card img { height: 120px; }
 
-  .profile-banner { height: 120px; padding: 0 20px; }
-  .profile-body { padding: 0 20px 24px; margin-top: -38px; }
+  .profile-banner { height: 110px; }
+  .profile-body { padding: 0 20px 24px; }
+  .profile-body .avatar.xl { margin-top: -38px; }
   .avatar.xl { width: 76px; height: 76px; font-size: 28px; }
   .pf-name { font-size: 21px; }
   .pf-stats > div { padding-right: 18px; margin-right: 18px; }
   .pf-stats b { font-size: 18px; }
   .pf-grid { columns: 2; column-gap: 10px; }
-  .edit-banner { height: 150px; margin-top: 27px; }
-  .edit-body { padding: 0 20px 24px; margin-top: -38px; }
+  .edit-banner { height: 130px; margin-top: 27px; }
+  .edit-body { padding: 0 20px 24px; }
+  .edit-avatar-wrap { margin-top: -38px; }
 
   .footer-inner { padding: 24px 18px; flex-direction: column; gap: 8px; text-align: center; }
   .footer-inner .muted { font-size: 11px; }
@@ -726,8 +732,9 @@ a { color: inherit; text-decoration: none; }
   .detail-info { padding: 18px 14px; }
   .price-row { flex-direction: column; align-items: stretch; gap: 12px; }
   .price-row .btn-primary.lg { width: 100%; }
-  .profile-banner { height: 105px; padding: 0 16px; }
+  .profile-banner { height: 96px; }
   .profile-body { padding: 0 16px 20px; }
+  .profile-body .avatar.xl { margin-top: -34px; }
   .avatar.xl { width: 68px; height: 68px; font-size: 25px; }
   .pf-stats > div { padding-right: 12px; margin-right: 12px; }
   .pf-stats b { font-size: 16px; }
