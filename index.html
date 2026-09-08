@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dremory · 灵感图集</title>
+<link rel="stylesheet" href="style.css?v=5">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23e60023' d='M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8zM18.6 2.1l.85 2.05 2.05.85-2.05.85-.85 2.05-.85-2.05-2.05-.85 2.05-.85z'/></svg>">
+</head>
+<body>
+
+<!-- 鼠标聚焦效果：光晕 + 跟随圆环 -->
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- ============ 顶部导航 ============ -->
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="brand" href="#" id="brandLink" aria-label="Dremory">
+      <svg class="brand-logo" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8zM18.6 2.1l.85 2.05 2.05.85-2.05.85-.85 2.05-.85-2.05-2.05-.85 2.05-.85z"/></svg>
+      <span class="brand-name">Dremory</span>
+    </a>
+
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" class="search-ico"><path d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 10-.7.7l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 110-9 4.5 4.5 0 010 9z"/></svg>
+      <input type="text" id="searchInput" data-i18n-ph="searchPh" placeholder="搜索作品、标签或作者">
+    </div>
+
+    <div class="nav-actions">
+      <div class="lang-select">
+        <svg viewBox="0 0 24 24" class="lang-ico"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm6.9 6h-2.9a15.8 15.8 0 00-1.3-3.3A8 8 0 0118.9 8zM12 4c.8 1.2 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.8 1.9-4zM4.3 14a8 8 0 010-4h3.4a17 17 0 000 4H4.3zm.8 2h2.9c.4 1.2.8 2.3 1.3 3.3A8 8 0 015.1 16zm2.9-8H5.1a8 8 0 014.2-3.3A15.8 15.8 0 008 8zm4 12c-.8-1.2-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.8-1.9 4zm2.3-6H7.7a15 15 0 010-4h8.6a15 15 0 010 4zm.4 5.3c.5-1 .9-2.1 1.3-3.3h2.9a8 8 0 01-4.2 3.3zM16.3 14a17 17 0 000-4h3.4a8 8 0 010 4h-3.4z"/></svg>
+        <select id="langSelect" aria-label="language">
+          <option value="zh">中文</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+        </select>
+      </div>
+
+      <button class="icon-btn" id="themeToggle" title="Day / Night">
+        <svg class="ico-sun" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zm0-5l1.5 3h-3L12 2zm0 20l-1.5-3h3L12 22zM2 12l3-1.5v3L2 12zm20 0l-3 1.5v-3L22 12zM4.2 4.2l3.3 1.1-2.2 2.2-1.1-3.3zm12.3 12.3l3.3 1.1-1.1 3.3-2.2-2.2zm3.3-12.3l-1.1 3.3-2.2-2.2 3.3-1.1zM7.5 16.5l-3.3 1.1 1.1 3.3 2.2-2.2z"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+      </button>
+
+      <button class="btn btn-primary" id="uploadBtn">
+        <svg viewBox="0 0 24 24" class="btn-ico"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span data-i18n="nav_upload">发布作品</span>
+      </button>
+
+      <!-- 未登录 -->
+      <button class="btn btn-ghost" id="loginBtn" data-i18n="nav_login">登录</button>
+
+      <!-- 已登录：头像菜单 -->
+      <div class="avatar-menu" id="avatarMenu" hidden>
+        <button class="avatar-btn" id="avatarBtn">
+          <span class="avatar" id="navAvatar">U</span>
+        </button>
+        <div class="dropdown" id="avatarDropdown">
+          <div class="dropdown-head">
+            <span class="avatar lg" id="ddAvatar">U</span>
+            <div>
+              <div class="dd-name" id="ddName">user</div>
+              <div class="dd-mail" id="ddMail"></div>
+            </div>
+          </div>
+          <button class="dd-item" id="ddProfile">
+            <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5c0-3-4-5.5-9-5.5z"/></svg>
+            <span data-i18n="nav_profile">个人主页</span>
+          </button>
+          <button class="dd-item" id="ddPurchases">
+            <svg viewBox="0 0 24 24"><path d="M4 5h16l-1.5 9H6.3L5 7H3m6 13a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm9 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-i18n="nav_purchases">我的购买</span>
+          </button>
+          <div class="dd-sep"></div>
+          <button class="dd-item danger" id="ddLogout">
+            <svg viewBox="0 0 24 24"><path d="M16 17l5-5-5-5M21 12H9M9 4H5a2 2 0 00-2 2v12a2 2 0 002 2h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-i18n="nav_logout">退出登录</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ============ 首屏 Hero ============ -->
+  <section class="hero">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="hero-polaroids" aria-hidden="true">
+      <img class="polaroid p1" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dreamy%20pastel%20cloudscape%20cotton%20candy%20sky%20surreal%20soft%20gradient&image_size=square" alt="">
+      <img class="polaroid p2" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=kyoto%20street%20cherry%20blossom%20pink%20petals%20spring%20photography&image_size=portrait_4_3" alt="">
+      <img class="polaroid p3" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20fluid%20art%20gold%20and%20deep%20blue%20swirling%20paint%20luxury&image_size=square" alt="">
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge" data-i18n="hero_badge">✨ 摄影 · AI 艺术 · 画册 · 插画</div>
+      <h1 class="hero-title" id="heroTitle"><span class="grad">发现并收藏</span><br>打动你的每一幅作品</h1>
+      <p class="hero-sub" data-i18n="hero_sub">注册即可上传摄影与 AI 创作，上架实物画册与虚拟插画，自由定价或免费分享。</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary lg" id="heroExplore" data-i18n="hero_explore">开始探索</button>
+        <button class="btn btn-outline lg" id="heroUpload" data-i18n="hero_upload">发布我的作品</button>
+      </div>
+      <div class="hero-stats">
+        <div><b id="statWorks">0</b><span data-i18n="stat_works">幅作品</span></div>
+        <div><b id="statCreators">4</b><span data-i18n="stat_creators">位创作者</span></div>
+        <div><b>4</b><span data-i18n="stat_langs">种语言</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 筛选栏 ============ -->
+  <section class="filter-bar" id="filterBar">
+    <div class="chips" id="chips">
+      <button class="chip active" data-filter="all" data-i18n="f_all">全部</button>
+      <button class="chip" data-filter="photo" data-i18n="f_photo">摄影作品</button>
+      <button class="chip" data-filter="ai" data-i18n="f_ai">AI 生成</button>
+      <button class="chip" data-filter="album" data-i18n="f_album">实物画册</button>
+      <button class="chip" data-filter="illu" data-i18n="f_illu">虚拟插画</button>
+      <button class="chip" data-filter="free" data-i18n="f_free">免费</button>
+    </div>
+    <div class="tag-banner" id="tagBanner" hidden>
+      <span class="tag-banner-label" data-i18n="tag_title">标签分类</span>
+      <span class="tag-banner-name" id="tagBannerName"></span>
+      <button class="tag-banner-x" id="tagClear" aria-label="clear">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ 瀑布流作品墙 ============ -->
+  <section class="masonry-wrap">
+    <div class="masonry" id="grid"></div>
+    <div class="empty" id="emptyState" hidden>
+      <svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zm10 17l-6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <p data-i18n="empty_tip">没有找到匹配的作品，换个关键词试试吧</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 作品详情弹层 ============ -->
+<div class="overlay" id="detailOverlay" hidden>
+  <div class="overlay-mask" data-close="detail"></div>
+  <div class="detail-panel" role="dialog">
+    <button class="close-btn" data-close="detail" aria-label="close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="detail-grid">
+      <!-- 左：图集 -->
+      <div class="detail-gallery">
+        <div class="gallery-stage">
+          <button class="gallery-nav prev" id="imgPrev" aria-label="prev">
+            <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="gallery-imgbox">
+            <img id="galleryImg" src="" alt="">
+          </div>
+          <button class="gallery-nav next" id="imgNext" aria-label="next">
+            <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="gallery-tools">
+            <button class="tool-btn" id="rotLeft" title="rotate left">
+              <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 112.3 5.6M4 12V7m0 5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-i18n="detail_rotate">旋转</span>
+            </button>
+            <span class="gallery-count" id="galleryCount">1/1</span>
+          </div>
+          <span class="orient-badge" id="orientBadge"></span>
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+      <!-- 右：信息 -->
+      <div class="detail-info">
+        <div class="detail-badges" id="detailBadges"></div>
+        <h2 class="detail-title" id="detailTitle"></h2>
+        <p class="detail-desc" id="detailDesc"></p>
+
+        <div class="seller-row">
+          <span class="avatar lg" id="detailAvatar"></span>
+          <div class="seller-info">
+            <div class="seller-name" id="detailAuthor"></div>
+            <div class="seller-sub" data-i18n="detail_seller">创作者</div>
+          </div>
+          <button class="btn btn-outline sm" id="followBtn" data-i18n="detail_follow">+ 关注</button>
+        </div>
+
+        <div class="price-row">
+          <div class="price-box">
+            <span class="price-label" data-i18n="detail_price">价格</span>
+            <span class="price-val" id="detailPrice"></span>
+          </div>
+          <button class="btn btn-primary lg" id="buyBtn"></button>
+        </div>
+
+        <div class="tags-block">
+          <div class="block-label" data-i18n="detail_tags">衍生标签 · 点击查看更多同类作品</div>
+          <div class="tag-list" id="detailTags"></div>
+        </div>
+
+        <div class="share-block">
+          <div class="block-label" data-i18n="share_title">分享作品</div>
+          <div class="share-row" id="shareRow">
+            <button class="share-btn" data-share="wechat" style="background:#07C160" title="WeChat">
+              <svg viewBox="0 0 24 24" fill="#fff"><path d="M9.3 4.5C5.8 4.5 3 6.9 3 9.8c0 1.7.9 3.2 2.4 4.2l-.6 2 2.2-1.1c.6.2 1.3.3 2 .3h.3a5.4 5.4 0 01-.2-1.5c0-2.9 2.7-5.2 6-5.2h.3c-.6-2.3-3.1-4-6.1-4z"/><path d="M15.2 9.7c-3 0-5.4 1.9-5.4 4.3 0 2.4 2.4 4.3 5.4 4.3.6 0 1.2-.1 1.8-.3l1.9.9-.5-1.7a4.1 4.1 0 001.6-3.2c0-2.4-2.4-4.3-5.4-4.3z"/></svg>
+            </button>
+            <button class="share-btn" data-share="qq" style="background:#12B7F5" title="QQ">
+              <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.6a4.3 4.3 0 014.3 4.3c0 .8-.2 1.5-.5 2.2 1.2 1.6 2.4 4 2.7 5.8.2 1.1-.3 1.9-1.1 1.9-.5 0-1-.3-1.4-.9-.4 1-1 1.9-1.8 2.5.9.4 1.5 1 1.5 1.6 0 .9-1.5 1.6-3.7 1.6s-3.7-.7-3.7-1.6c0-.6.6-1.2 1.5-1.6-.8-.6-1.4-1.5-1.8-2.5-.4.6-.9.9-1.4.9-.8 0-1.3-.8-1.1-1.9.3-1.8 1.5-4.2 2.7-5.8a4.3 4.3 0 01-.5-2.2A4.3 4.3 0 0112 2.6z"/></svg>
+            </button>
+            <button class="share-btn" data-share="weibo" style="background:#E6162D" title="Weibo">
+              <svg viewBox="0 0 24 24"><path fill="#fff" d="M10.2 8.6c-4.2.5-7.5 3.2-7.5 6.3 0 3.3 3.7 5.6 8.2 5.6 4.9 0 8.5-2.7 8.5-6 0-2.7-2.5-4.7-5.9-4.7-.6 0-1.2.1-1.8.2.2-.5.3-1 .2-1.4-.2-.9-1-1.2-1.7-1z"/><circle cx="10.5" cy="14.9" r="2.8" fill="#fff"/><circle cx="10.5" cy="14.9" r="1.2" fill="#E6162D"/><path d="M16.6 3.1c2.7.4 4.8 2.5 5.2 5.2M17.2 6.4a2.7 2.7 0 012 2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+            <button class="share-btn" data-share="xhs" style="background:#FF2442" title="Xiaohongshu">
+              <svg viewBox="0 0 24 24"><rect x="2.8" y="7.2" width="18.4" height="9.6" rx="2.6" fill="#fff"/><text x="12" y="14.4" text-anchor="middle" font-family="sans-serif" font-size="5.6" font-weight="700" fill="#FF2442">小红书</text></svg>
+            </button>
+            <button class="share-btn" data-share="x" style="background:#111111" title="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="#fff"><path d="M17.8 3h3l-6.7 7.7L22 21h-6.2l-4.9-6.3L5.3 21h-3l7.2-8.2L2 3h6.4l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg>
+            </button>
+            <button class="share-btn" data-share="ins" style="background:linear-gradient(45deg,#f9ce34,#ee2a7b,#6228d7)" title="Instagram">
+              <svg viewBox="0 0 24 24"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="5" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="12" cy="12" r="3.9" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="17.1" cy="6.9" r="1.25" fill="#fff"/></svg>
+            </button>
+            <button class="share-btn" data-share="douyin" style="background:#010101" title="抖音">
+              <svg viewBox="0 0 24 24"><path d="M15.2 3c.4 2.3 1.9 3.9 4.3 4.2v3c-1.7 0-3.1-.5-4.3-1.4v6.5a5.6 5.6 0 11-5.6-5.6c.3 0 .7 0 1 .1v3.1a2.6 2.6 0 101.8 2.4V3h2.8z" fill="#25F4EE" transform="translate(-1,-0.6)"/><path d="M15.2 3c.4 2.3 1.9 3.9 4.3 4.2v3c-1.7 0-3.1-.5-4.3-1.4v6.5a5.6 5.6 0 11-5.6-5.6c.3 0 .7 0 1 .1v3.1a2.6 2.6 0 101.8 2.4V3h2.8z" fill="#FE2C55" transform="translate(1,0.6)"/><path d="M15.2 3c.4 2.3 1.9 3.9 4.3 4.2v3c-1.7 0-3.1-.5-4.3-1.4v6.5a5.6 5.6 0 11-5.6-5.6c.3 0 .7 0 1 .1v3.1a2.6 2.6 0 101.8 2.4V3h2.8z" fill="#fff"/></svg>
+            </button>
+            <button class="share-btn" data-share="youtube" style="background:#FF0000" title="YouTube">
+              <svg viewBox="0 0 24 24"><rect x="2.5" y="6.3" width="19" height="11.4" rx="3.4" fill="#fff"/><path d="M10.4 9.6v4.8l4.6-2.4z" fill="#FF0000"/></svg>
+            </button>
+            <button class="share-btn copy" data-share="copy" title="Copy link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10.2 13.8a4.2 4.2 0 006 0l2.8-2.8a4.2 4.2 0 10-6-6l-1.3 1.3"/><path d="M13.8 10.2a4.2 4.2 0 00-6 0L5 13a4.2 4.2 0 106 6l1.3-1.3"/></svg>
+            </button>
+          </div>
+          <div class="qr-pop" id="qrPop" hidden>
+            <img id="qrImg" alt="QR">
+            <span data-i18n="share_qrTip">微信扫码分享</span>
+          </div>
+        </div>
+
+        <div class="related-block">
+          <div class="block-label" data-i18n="detail_related">相关推荐</div>
+          <div class="related-row" id="relatedRow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 登录 / 注册弹窗 ============ -->
+<div class="overlay" id="authOverlay" hidden>
+  <div class="overlay-mask" data-close="auth"></div>
+  <div class="modal-panel" role="dialog">
+    <button class="close-btn" data-close="auth" aria-label="close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="auth-head">
+      <svg class="brand-logo lg" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8zM18.6 2.1l.85 2.05 2.05.85-2.05.85-.85 2.05-.85-2.05-2.05-.85 2.05-.85z"/></svg>
+      <h3 id="authTitle" data-i18n="auth_login">欢迎回来</h3>
+      <p class="muted" id="authSub" data-i18n="auth_sub">登录后即可发布与购买作品</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" data-i18n="nav_login">登录</button>
+      <button class="auth-tab" id="tabReg" data-i18n="nav_register">注册</button>
+    </div>
+    <form class="auth-form" id="authForm" novalidate>
+      <label class="field">
+        <span data-i18n="auth_user">用户名</span>
+        <input type="text" id="authName" placeholder="3 位以上字符" autocomplete="username">
+      </label>
+      <label class="field" id="emailField" hidden>
+        <span data-i18n="auth_email">邮箱（选填）</span>
+        <input type="email" id="authEmail" placeholder="you@example.com">
+      </label>
+      <label class="field">
+        <span data-i18n="auth_pass">密码</span>
+        <input type="password" id="authPass" placeholder="6 位以上字符" autocomplete="current-password">
+      </label>
+      <label class="field" id="pass2Field" hidden>
+        <span data-i18n="auth_pass2">确认密码</span>
+        <input type="password" id="authPass2" autocomplete="new-password">
+      </label>
+      <div class="form-err" id="authErr"></div>
+      <button type="submit" class="btn btn-primary lg block" id="authSubmit" data-i18n="auth_loginBtn">登录</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ 上传作品弹窗 ============ -->
+<div class="overlay" id="uploadOverlay" hidden>
+  <div class="overlay-mask" data-close="upload"></div>
+  <div class="modal-panel wide" role="dialog">
+    <button class="close-btn" data-close="upload" aria-label="close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="auth-head">
+      <h3 data-i18n="up_title">发布新作品</h3>
+      <p class="muted" data-i18n="up_sub">上传的图片将自动添加 Dremory 水印以保护版权</p>
+    </div>
+    <form class="upload-form" id="uploadForm" novalidate>
+      <div class="up-grid">
+        <label class="field">
+          <span data-i18n="up_name">作品标题</span>
+          <input type="text" id="upName" data-i18n-ph="up_namePh" placeholder="给作品起个名字">
+        </label>
+        <label class="field">
+          <span data-i18n="up_type">作品类型</span>
+          <select id="upType">
+            <option value="photo" data-i18n="type_photo">摄影作品（自己拍摄）</option>
+            <option value="ai" data-i18n="type_ai">AI 生成作品（将标注 AI 提醒买家）</option>
+            <option value="album" data-i18n="type_album">实物画册（实体发货）</option>
+            <option value="illu" data-i18n="type_illu">虚拟插画（数字下载）</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="field">
+        <span data-i18n="up_desc">作品描述</span>
+        <textarea id="upDesc" rows="2" data-i18n-ph="up_descPh" placeholder="介绍一下你的创作灵感、尺寸或交付方式…"></textarea>
+      </label>
+
+      <div class="up-grid">
+        <div class="field">
+          <span data-i18n="up_orient">画幅方向</span>
+          <div class="orient-pick" id="orientPick">
+            <label class="orient-opt">
+              <input type="radio" name="orient" value="p" checked>
+              <span class="orient-card">
+                <span class="orient-ico portrait"><i></i></span>
+                <b data-i18n="up_orientP">纵向</b>
+              </span>
+            </label>
+            <label class="orient-opt">
+              <input type="radio" name="orient" value="l">
+              <span class="orient-card">
+                <span class="orient-ico landscape"><i></i></span>
+                <b data-i18n="up_orientL">横向</b>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <span data-i18n="up_price">定价</span>
+          <div class="price-pick">
+            <label class="switch-line">
+              <input type="checkbox" id="upFree" checked>
+              <span class="switch"></span>
+              <span data-i18n="up_free">免费分享</span>
+            </label>
+            <div class="amount-box" id="amountBox" hidden>
+              <span class="yuan">¥</span>
+              <input type="number" id="upAmount" min="1" max="9999" step="1" value="9" placeholder="9">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <label class="field">
+        <span data-i18n="up_tags">标签（用逗号分隔，最多 5 个）</span>
+        <input type="text" id="upTags" data-i18n-ph="up_tagsPh" placeholder="例如：风景, 水彩, 治愈">
+      </label>
+
+      <div class="field">
+        <span data-i18n="up_imgs">作品图片（可多选）</span>
+        <label class="drop-zone" id="dropZone">
+          <input type="file" id="upFiles" accept="image/*" multiple hidden>
+          <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="up_drag">点击或拖拽图片到这里上传</span>
+          <span class="muted sm" data-i18n="up_hint">支持 JPG / PNG，最多 10 张，自动压缩并添加水印</span>
+          <span class="drop-count" id="dropCount"></span>
+        </label>
+        <div class="up-previews" id="upPreviews"></div>
+      </div>
+
+      <div class="ai-notice" id="aiNotice" hidden>
+        <svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 6l7.5 13h-15L12 8zm-1 4v4h2v-4h-2zm0 5v2h2v-2h-2z"/></svg>
+        <span data-i18n="up_aiNotice">该作品将被标注「AI 生成」，买家在详情页会看到明显提示。</span>
+      </div>
+
+      <div class="form-err" id="upErr"></div>
+      <div class="up-actions">
+        <button type="button" class="btn btn-ghost" data-close="upload" data-i18n="up_cancel">取消</button>
+        <button type="submit" class="btn btn-primary lg" id="upSubmit">
+          <span class="btn-label" data-i18n="up_submit">发布作品</span>
+          <span class="btn-loading" hidden></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ 支付弹窗 ============ -->
+<div class="overlay" id="payOverlay" hidden>
+  <div class="overlay-mask" data-close="pay"></div>
+  <div class="modal-panel sm" role="dialog">
+    <button class="close-btn" data-close="pay" aria-label="close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="pay-head">
+      <span class="pay-ico">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16l-1.5 9H6.3L5 7H3m6 13a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm9 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3 data-i18n="pay_title">确认订单</h3>
+    </div>
+    <div class="pay-item">
+      <img id="payThumb" src="" alt="">
+      <div>
+        <div class="pay-name" id="payName"></div>
+        <div class="muted sm" id="payType"></div>
+      </div>
+      <div class="pay-price" id="payPrice"></div>
+    </div>
+    <div class="pay-methods">
+      <label class="pay-method active">
+        <input type="radio" name="paym" checked>
+        <span class="pay-wechat">WeChat</span>
+        <span data-i18n="pay_wechat">微信支付</span>
+      </label>
+      <label class="pay-method">
+        <input type="radio" name="paym">
+        <span class="pay-ali">Ali</span>
+        <span data-i18n="pay_ali">支付宝</span>
+      </label>
+    </div>
+    <button class="btn btn-primary lg block" id="payConfirm">
+      <span class="btn-label" data-i18n="pay_confirm">确认支付</span>
+      <span class="btn-loading" hidden></span>
+    </button>
+    <p class="muted sm center" data-i18n="pay_demo">* 本站为毕设演示，支付流程为模拟效果，不会产生真实交易</p>
+  </div>
+</div>
+
+<!-- ============ 个人主页弹层 ============ -->
+<div class="overlay" id="profileOverlay" hidden>
+  <div class="overlay-mask" data-close="profile"></div>
+  <div class="profile-panel" role="dialog">
+    <button class="close-btn light" data-close="profile" aria-label="close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+
+    <!-- 普通浏览态 -->
+    <div class="profile-view" id="profileView">
+      <div class="profile-banner" id="profileBanner">
+        <span class="avatar xl" id="pfAvatar"></span>
+      </div>
+      <div class="profile-body">
+        <h2 class="pf-name" id="pfName"></h2>
+        <p class="pf-bio" id="pfBio"></p>
+        <div class="pf-stats">
+          <div><b id="pfWorks">0</b><span data-i18n="prof_works">作品</span></div>
+          <div><b id="pfFans">0</b><span data-i18n="prof_fans">粉丝</span></div>
+          <div><b id="pfLikes">0</b><span data-i18n="prof_likes">获赞</span></div>
+          <div><b id="pfBuys">0</b><span data-i18n="prof_buys">已购</span></div>
+        </div>
+        <div class="pf-actions">
+          <button class="btn btn-primary" id="pfEditBtn">
+            <svg viewBox="0 0 24 24"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 00-3-3L5 17v3zM13.5 6.5l3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-i18n="prof_edit">编辑资料</span>
+          </button>
+        </div>
+        <div class="pf-tabs">
+          <button class="pf-tab active" data-pftab="works" data-i18n="prof_myworks">我的作品</button>
+          <button class="pf-tab" data-pftab="buys" data-i18n="prof_mybuys">我的购买</button>
+        </div>
+        <div class="pf-grid" id="pfGrid"></div>
+        <div class="empty sm" id="pfEmpty" hidden>
+          <p data-i18n="pf_empty">这里还空空如也，去发布第一件作品吧～</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 醒目编辑态 -->
+    <div class="profile-edit" id="profileEdit" hidden>
+      <div class="edit-ribbon"><span data-i18n="prof_editing">编辑资料中 · EDITING</span></div>
+      <div class="edit-banner" id="editBanner">
+        <button type="button" class="banner-change" id="bannerChange">
+          <svg viewBox="0 0 24 24"><path d="M4 16l4.5-4.5a1.5 1.5 0 012.1 0L15 16m-1-1l1.5-1.5a1.5 1.5 0 012.1 0L20 15M4 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="prof_banner">更换横幅配色</span>
+        </button>
+      </div>
+      <div class="edit-body">
+        <label class="edit-avatar-wrap">
+          <span class="avatar xl" id="editAvatar"></span>
+          <span class="edit-avatar-mask">
+            <svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 012-2h2l1.5-2h5L16 6h2a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8zm8 9a4 4 0 100-8 4 4 0 000 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <input type="file" id="editAvatarInput" accept="image/*" hidden>
+        </label>
+        <div class="edit-fields">
+          <label class="field">
+            <span data-i18n="prof_name">昵称</span>
+            <input type="text" id="editName">
+          </label>
+          <label class="field">
+            <span data-i18n="prof_bio">个人简介</span>
+            <textarea id="editBio" rows="3"></textarea>
+          </label>
+        </div>
+        <div class="edit-actions">
+          <button class="btn btn-ghost lg" id="editCancel" data-i18n="prof_cancel">取消</button>
+          <button class="btn btn-primary lg" id="editSave">
+            <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-i18n="prof_save">保存资料</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast 容器 -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8zM18.6 2.1l.85 2.05 2.05.85-2.05.85-.85 2.05-.85-2.05-2.05-.85 2.05-.85z"/></svg>
+      <span class="brand-name">Dremory</span>
+    </div>
+    <p class="muted sm" data-i18n="footer_text">Dremory 灵感图集 · 毕业设计演示站点 · 所有上传图片均受水印版权保护</p>
+  </div>
+</footer>
+
+<script src="app.js?v=5"></script>
+</body>
+</html>
