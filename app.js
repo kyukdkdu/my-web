@@ -546,7 +546,7 @@ function renderNav() {
       el.innerHTML = currentUser.avatar
         ? `<img src="${currentUser.avatar}" alt="">`
         : (currentUser.name[0] || 'U').toUpperCase();
-      if (currentUser.color) el.style.background = `linear-gradient(135deg, ${currentUser.color[0]}, ${currentUser.color[1]})`;
+      el.style.background = '';
     };
     setAv($('#navAvatar')); setAv($('#ddAvatar'));
     $('#ddName').textContent = currentUser.name;
@@ -604,7 +604,7 @@ function cardHTML(it) {
   const avInner = a.avatar
     ? `<img src="${a.avatar}" alt="">`
     : (a.name[0] || 'P').toUpperCase();
-  const avStyle = a.color && !a.avatar ? `style="background:linear-gradient(135deg,${a.color[0]},${a.color[1]})"` : '';
+  const avStyle = '';
   return `
   <article class="card" data-id="${it.id}">
     <div class="card-imgbox orient-${it.orient}">
@@ -716,7 +716,7 @@ function openDetail(id, keepRot) {
   $('#detailAuthor').textContent = a.name;
   const av = $('#detailAvatar');
   av.innerHTML = a.avatar ? `<img src="${a.avatar}" alt="">` : (a.name[0] || 'P').toUpperCase();
-  av.style.background = a.avatar ? '' : `linear-gradient(135deg,${a.color[0]},${a.color[1]})`;
+  av.style.background = '';
 
   $('#detailBadges').innerHTML = [
     it.type === 'ai' ? `<span class="badge ai">✦ ${t('type_ai_s')}</span>` : '',
@@ -1153,11 +1153,11 @@ function watermarkImage(dataUrl) {
       ctx.fillStyle = 'rgba(0,0,0,0.45)';
       roundRectPath(ctx, cx, cy, chipW, chH, r);
       ctx.fill();
-      // 白色圆底 + 红色 P 点
+      // 白色圆底 + 黑色点（极简中性色）
       const dotX = cx + pad + r, dotY = cy + r;
       ctx.fillStyle = '#ffffff';
       ctx.beginPath(); ctx.arc(dotX, dotY, r * 0.66, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#e60023';
+      ctx.fillStyle = '#111111';
       ctx.beginPath(); ctx.arc(dotX, dotY, r * 0.36, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
@@ -1213,9 +1213,8 @@ function openProfile(refreshOnly) {
 }
 
 function renderProfile() {
-  // 横幅
-  const [c1, c2] = BANNER_PRESETS[currentUser.banner || 0];
-  $('#profileBanner').style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
+  // 横幅：极简风使用浅灰纯色，不设彩色渐变
+  $('#profileBanner').style.background = '';
   // 头像 / 名字 / 简介
   const av = $('#pfAvatar');
   paintAvatarEl(av, currentUser);
@@ -1274,7 +1273,7 @@ function paintEditBanner() {
 function paintEditAvatar() { paintAvatarEl($('#editAvatar'), currentUser); }
 function paintAvatarEl(el, u) {
   el.innerHTML = u.avatar ? `<img src="${u.avatar}" alt="">` : (u.name[0] || 'U').toUpperCase();
-  el.style.background = u.avatar ? '' : `linear-gradient(135deg, ${u.color[0]}, ${u.color[1]})`;
+  el.style.background = '';
 }
 function saveProfile() {
   const name = $('#editName').value.trim();
