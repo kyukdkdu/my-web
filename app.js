@@ -502,8 +502,8 @@ function bindEvents() {
   // 头像下拉
   $('#avatarBtn').addEventListener('click', (e) => { e.stopPropagation(); $('#avatarDropdown').classList.toggle('open'); });
   document.addEventListener('click', () => $('#avatarDropdown').classList.remove('open'));
-  $('#ddProfile').addEventListener('click', openProfile);
-  $('#ddPurchases').addEventListener('click', () => { openProfile(); pfTab = 'buys'; renderProfile(); });
+  $('#ddProfile').addEventListener('click', () => openProfile());
+  $('#ddPurchases').addEventListener('click', () => { openProfile(); pfTab = 'buys'; $$('.pf-tab').forEach(t => t.classList.toggle('active', t.dataset.pftab === 'buys')); renderProfile(); });
   $('#ddLogout').addEventListener('click', logout);
 
   // 筛选
@@ -999,7 +999,7 @@ function openUploadFlow() {
 function bindUpload() {
   const dz = $('#dropZone'), input = $('#upFiles');
   // 点击区域由 <label> 原生转发到 input，无需手动 click()（避免重复触发文件对话框）
-  input.addEventListener('change', () => addFiles(input.files));
+  input.addEventListener('change', () => { addFiles(input.files); input.value = ''; });
   ['dragover', 'dragenter'].forEach(ev => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('dragover'); }));
   ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('dragover'); }));
   dz.addEventListener('drop', (e) => addFiles(e.dataTransfer.files));
@@ -1042,27 +1042,31 @@ function bindUpload() {
       return hit ? hit[0] : raw;
     });
 
-    const item = {
-      id: 'u' + Date.now() + Math.floor(Math.random() * 100),
-      authorId: currentUser.id,
-      authorName: currentUser.name,
-      authorAvatar: currentUser.avatar,
-      authorColor: currentUser.color,
-      type, orient,
-      price: free ? 0 : (amount || 9),
-      titleRaw: title,
-      descRaw: $('#upDesc').value.trim(),
-      tags: tagIds,
-      imgs, likes: 0, ts: Date.now(), wmV: 2
-    };
-    userItems.unshift(item);
+    // 每张图片创建一个独立作品发布到平台（一次上传多张 = 多个作品）
+    const total = imgs.length;
+    for (let idx = total - 1; idx >= 0; idx--) {
+      const item = {
+        id: 'u' + Date.now() + '_' + idx + '_' + Math.floor(Math.random() * 1000),
+        authorId: currentUser.id,
+        authorName: currentUser.name,
+        authorAvatar: currentUser.avatar,
+        authorColor: currentUser.color,
+        type, orient,
+        price: free ? 0 : (amount || 9),
+        titleRaw: total > 1 ? `${title} (${idx + 1}/${total})` : title,
+        descRaw: $('#upDesc').value.trim(),
+        tags: tagIds,
+        img: imgs[idx], imgs: [imgs[idx]], likes: 0, ts: Date.now() - idx, wmV: 2
+      };
+      userItems.unshift(item);
+      items.unshift(item);
+    }
     try {
       store.set('pin_items', userItems);
     } catch (err) {
       // localStorage 超容量时，仅保证本次会话内可浏览
       console.warn('localStorage 容量不足，作品仅在本次会话中保留', err);
     }
-    items.unshift(item);
 
     btn.disabled = false;
     btn.querySelector('.btn-label').hidden = false;
@@ -1207,7 +1211,11 @@ function bindProfile() {
 
 function openProfile(refreshOnly) {
   if (!currentUser) { openAuth('login'); return; }
-  if (!refreshOnly) openOverlay('profile');
+  if (!refreshOnly) {
+    pfTab = 'works';
+    $$('.pf-tab').forEach(t => t.classList.toggle('active', t.dataset.pftab === 'works'));
+    openOverlay('profile');
+  }
   exitEditProfile(true);
   renderProfile();
 }
